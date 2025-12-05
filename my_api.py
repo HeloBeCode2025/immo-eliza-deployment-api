@@ -43,7 +43,7 @@ def read_root():
 
 @app.post("/predict", response_model=PropertyOutput)
 def predict(data: PropertyInput):
-    df = preprocessing_new_data(pd.read_csv('./data/clean/clean_data.csv'), pd.DataFrame([data.model_dump()]))
+    df = preprocessing_new_data(pd.read_csv('./clean_data.csv'), pd.DataFrame([data.model_dump()]))
 
     feature_names = load("./model_features.joblib") #load the feature names used during training
     X_dummy = df.reindex(columns=feature_names, fill_value=0) # reindex dummy to have all training features, fill missing with 0
