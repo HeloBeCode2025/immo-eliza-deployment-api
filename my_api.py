@@ -6,15 +6,10 @@ from pycaret.datasets import get_data
 from pycaret.regression import *
 import pandas as pd
 from joblib import load
-from  data_preprocessing import preprocessing
+from  data_preprocessing import preprocessing_new_data
 import numpy as np
 
 df = pd.read_csv("./clean_data.csv")
-setup(
-    data=df,
-    target="price",
-)
-
 
 app = FastAPI()
 model = load("./best_price_model.joblib")
@@ -48,7 +43,7 @@ def read_root():
 
 @app.post("/predict", response_model=PropertyOutput)
 def predict(data: PropertyInput):
-    df = preprocessing(pd.DataFrame([data.model_dump()]))
+    df = preprocessing_new_data(pd.read_csv('./data/clean/clean_data.csv'), pd.DataFrame([data.model_dump()]))
 
     feature_names = load("./model_features.joblib") #load the feature names used during training
     X_dummy = df.reindex(columns=feature_names, fill_value=0) # reindex dummy to have all training features, fill missing with 0
